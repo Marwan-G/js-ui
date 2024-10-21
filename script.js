@@ -87,14 +87,86 @@ movements.map( (mov)=>{
 )
 
 
-const createusername = function(user){
-  const usernamesplit = user.split(" ")
-    
-    return usernamesplit.map((str)=>
-    
-       str.slice(0,1)).join("").toLocaleLowerCase()
-  }
+const createusername = function(accounts){
+
+  accounts.forEach(
+    (acc) => {
+    acc.username =acc.owner
+    .split(" ")
+    .map( (first)=> first.slice(0,1))
+    .join("").toLocaleLowerCase()
+
+})
+
+}
   
-  
-  const result = createusername('Steven Thomas Williams')
-  console.log(result)
+createusername(accounts)
+// console.log(account1)
+
+// const diposits = movements.filter( (number)=> number>0)
+// const withdrawal= movements.filter( (mov) => mov < 0)
+// console.log(withdrawal)
+
+// const numbers = [10,10, 10, 10, 4];
+// //const balance = numbers.reduce( (acc,current)=> current > acc? current:acc,numbers[0])
+// const balance =numbers.reduce( function(acc,current){
+//   return acc+current
+// } , 0)
+
+
+// console.log(balance)
+const balance_value = document.querySelector(`.balance__value`)
+
+const calculate_balance = function(mov){
+ return  mov.reduce((acc,curr) => acc+curr)
+}
+
+const balance =calculate_balance(account1.movements)
+balance_value.textContent=`${balance}`
+
+///////
+
+const summary = document.querySelector(`.summary__value--in`)
+const incomeBalance = function(movment){
+  return movment.filter( (mov) => mov > 0).reduce((acc,curr)=>acc+curr,0)
+}
+
+const income =  incomeBalance(account1.movements)
+summary.textContent=`${income}`
+
+
+const summary_out = document.querySelector(`.summary__value--out`)
+const outBalance = function(movment){
+  return movment.filter( (mov) => mov < 0).reduce((acc,curr)=>acc+curr,0)
+}
+
+const out =  outBalance(account1.movements)
+summary_out.textContent=`${out}`
+
+
+
+// Maximum value of movment array
+
+// let max = 0;
+// for( const curr of movements){
+
+//  max = max >= curr? max : curr;
+
+// }
+
+//const result = movements.reduce( (max,curr)=> max >= curr? max : curr, movements[0])
+
+
+
+// const dogAge =[1,2,4,6,7,8];
+// const calcHumanAge = function(dogAge){
+//   return  dogAge.map( (age)=> (age<=2 ? age*2 : 16+age*4))
+//   .filter( (age) => age >= 18)
+//   .reduce((acc, curr,i,arr)=> acc+curr/arr.length)
+
+// }
+
+// const humanage = calcHumanAge(dogAge)
+
+
+// console.log(humanage);  // Output: Average human age of filtered dogs
