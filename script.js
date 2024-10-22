@@ -141,8 +141,17 @@ const outBalance = function(movment){
 }
 
 const out =  outBalance(account1.movements)
-summary_out.textContent=`${out}`
+summary_out.textContent=`${Math.abs(out)}`
+// For each diposit , get interes 1.2
 
+const interset_container = document.querySelector(`.summary__value--interest`)
+const interest = function(movement){
+  return movement.filter( (mov) => mov > 0 )
+  .map((mov) => mov * 1/100)
+  .reduce( (acc, curr) => acc+curr, 0)
+}
+const intersets =interest(account1.movements)
+interset_container.textContent = `${intersets}`
 
 
 // Maximum value of movment array
