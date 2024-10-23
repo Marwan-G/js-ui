@@ -89,7 +89,7 @@ movements.map( (mov)=>{
 
 const createusername = function(accounts){
 
-  accounts.forEach(
+   accounts.forEach(
     (acc) => {
     acc.username =acc.owner
     .split(" ")
@@ -101,7 +101,6 @@ const createusername = function(accounts){
 }
   
 createusername(accounts)
-// console.log(account1)
 
 // const diposits = movements.filter( (number)=> number>0)
 // const withdrawal= movements.filter( (mov) => mov < 0)
@@ -152,6 +151,17 @@ const interest = function(movement){
 }
 const intersets =interest(account1.movements)
 interset_container.textContent = `${intersets}`
+const loginbtn = document.querySelector(`.login__btn`)
+
+let currentAccount;
+loginbtn.addEventListener("click",function(e) {
+  e.preventDefault()  
+    currentAccount = accounts.find((acc) => acc.username === inputLoginUsername.value )
+  
+    console.log(currentAccount)
+  });
+  
+
 
 
 // Maximum value of movment array
