@@ -75,16 +75,21 @@ const movements  = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 const container = document.querySelector(`.movements`)
-movements.map( (mov)=>{
-  const color = mov > 0 ? "movements__type--deposit":"movements__type--withdrawal"
-  const html = `<div class="movements__row">
-          <div class="movements__type ${color}">2 deposit</div>
-          <div class="movements__date">3 days ago</div>
-          <div class="movements__value">${mov}</div>
-        </div>`
-   container.insertAdjacentHTML("afterbegin",html)
-  }
-)
+const movments_account = function(movements){
+
+
+  movements.map( (mov)=>{
+    const color = mov > 0 ? "movements__type--deposit":"movements__type--withdrawal"
+    const html = `<div class="movements__row">
+            <div class="movements__type ${color}">2 deposit</div>
+            <div class="movements__date">3 days ago</div>
+            <div class="movements__value">${mov}</div>
+          </div>`
+     container.insertAdjacentHTML("afterbegin",html)
+    }
+  )
+}
+
 
 
 const createusername = function(accounts){
@@ -120,8 +125,6 @@ const calculate_balance = function(mov){
  return  mov.reduce((acc,curr) => acc+curr)
 }
 
-const balance =calculate_balance(account1.movements)
-balance_value.textContent=`${balance}`
 
 ///////
 
@@ -130,8 +133,7 @@ const incomeBalance = function(movment){
   return movment.filter( (mov) => mov > 0).reduce((acc,curr)=>acc+curr,0)
 }
 
-const income =  incomeBalance(account1.movements)
-summary.textContent=`${income}`
+
 
 
 const summary_out = document.querySelector(`.summary__value--out`)
@@ -139,8 +141,7 @@ const outBalance = function(movment){
   return movment.filter( (mov) => mov < 0).reduce((acc,curr)=>acc+curr,0)
 }
 
-const out =  outBalance(account1.movements)
-summary_out.textContent=`${Math.abs(out)}`
+
 // For each diposit , get interes 1.2
 
 const interset_container = document.querySelector(`.summary__value--interest`)
@@ -157,8 +158,16 @@ let currentAccount;
 loginbtn.addEventListener("click",function(e) {
   e.preventDefault()  
     currentAccount = accounts.find((acc) => acc.username === inputLoginUsername.value )
-  
-    console.log(currentAccount)
+    movments_account(currentAccount.movements)
+    /// account balance
+    const balance =calculate_balance(currentAccount.movements)
+    balance_value.textContent=`${balance}`  
+    //account income
+    const income =  incomeBalance(currentAccount.movements)
+    summary.textContent=`${income}`
+    //account outbalnace
+    const out =  outBalance(currentAccount.movements)
+    summary_out.textContent=`${Math.abs(out)}`
   });
   
 
