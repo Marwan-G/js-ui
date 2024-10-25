@@ -157,9 +157,9 @@ loginbtn.addEventListener("click", function (e) {
     e.preventDefault()
     currentAccount = accounts.find((acc) => acc.username === inputLoginUsername.value)
 
-    hideElement.style.opacity = 100;
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
+    hideElement.style.opacity = 100;
     movments_account(currentAccount.movements)
     /// account balance
     const balance = calculate_balance(currentAccount.movements)
@@ -170,6 +170,24 @@ loginbtn.addEventListener("click", function (e) {
     //account outbalnace
     const out = outBalance(currentAccount.movements)
     summary_out.textContent = `${Math.abs(out)}`
+});
+
+btnTransfer.addEventListener("click", function (e) {
+    e.preventDefault()
+
+    //Read from inputTransferAmount <input > and Readfrom To whom Transfer
+    const amoutTotransfer = inputTransferTo.value
+    // check if there is enough amount in the balance , means call the balance
+    calculate_balance(currentAccount.movements) >= inputTransferAmount.value
+
+    // , then deduct from the amount
+    // and show the remaning balance balance
+    //    const balance = calculate_balance(currentAccount.movements)
+    //     balance_value.textContent = `${balance}`
+
+
+    // inputTransferAmount.value
+
 });
 
 
