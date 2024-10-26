@@ -61,6 +61,8 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 const hideElement = document.querySelector(`.hide`)
+const loginbtn = document.querySelector(`.login__btn`)
+
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -76,10 +78,8 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 const container = document.querySelector(`.movements`)
-const movments_account = function (movements) {
-
-
-    movements.map((mov) => {
+const movments_account = function (currentAccount) {
+    currentAccount.movements.map((mov) => {
             const color = mov > 0 ? "movements__type--deposit" : "movements__type--withdrawal"
             const html = `<div class="movements__row">
             <div class="movements__type ${color}">2 deposit</div>
@@ -121,36 +121,54 @@ createusername(accounts)
 // console.log(balance)
 const balance_value = document.querySelector(`.balance__value`)
 
-const calculate_balance = function (mov) {
-    return mov.reduce((acc, curr) => acc + curr)
+const calcDisplayBalance = function (currentAccount) {
+      currentAccount.balance = currentAccount.movements.reduce((acc, curr) => acc + curr)
+      balance_value.textContent = `${currentAccount.balance}`
+           
 }
-
 
 ///////
 
 const summary = document.querySelector(`.summary__value--in`)
-const incomeBalance = function (movment) {
-    return movment.filter((mov) => mov > 0).reduce((acc, curr) => acc + curr, 0)
+const incomeBalance = function (currentAccount) {
+     const income = currentAccount.movements.filter((mov) => mov > 0).reduce((acc, curr) => acc + curr, 0)
+     summary.textContent = `${income}`
+
 }
 
 
 const summary_out = document.querySelector(`.summary__value--out`)
-const outBalance = function (movment) {
-    return movment.filter((mov) => mov < 0).reduce((acc, curr) => acc + curr, 0)
+const outBalance = function (currentAccount) {
+      const out = currentAccount.movements.filter((mov) => mov < 0).reduce((acc, curr) => acc + curr, 0)
+       summary_out.textContent = `${Math.abs(out)}`
 }
 
 
 // For each diposit , get interes 1.2
 
 const interset_container = document.querySelector(`.summary__value--interest`)
-const interest = function (movement) {
-    return movement.filter((mov) => mov > 0)
+const interest = function (currentAccount) {
+      const intersets = currentAccount.movements.filter((mov) => mov > 0)
         .map((mov) => mov * 1 / 100)
         .reduce((acc, curr) => acc + curr, 0)
+      
+     interset_container.textContent = `${intersets}`
 }
-const intersets = interest(account1.movements)
-interset_container.textContent = `${intersets}`
-const loginbtn = document.querySelector(`.login__btn`)
+
+const updateUI = function(currentAccount){
+  // movment account
+  movments_account(currentAccount)
+  calcDisplayBalance(currentAccount)
+  //account income
+  incomeBalance(currentAccount)
+  
+  //account outbalnace
+  outBalance(currentAccount)
+
+  interest(currentAccount)
+    
+}
+
 
 let currentAccount;
 loginbtn.addEventListener("click", function (e) {
@@ -160,58 +178,24 @@ loginbtn.addEventListener("click", function (e) {
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
     hideElement.style.opacity = 100;
-    movments_account(currentAccount.movements)
-    /// account balance
-    const balance = calculate_balance(currentAccount.movements)
-    balance_value.textContent = `${balance}`
-    //account income
-    const income = incomeBalance(currentAccount.movements)
-    summary.textContent = `${income}`
-    //account outbalnace
-    const out = outBalance(currentAccount.movements)
-    summary_out.textContent = `${Math.abs(out)}`
+   
+    
+    updateUI(currentAccount);
 });
 
 btnTransfer.addEventListener("click", function (e) {
     e.preventDefault()
-
-    //Read from inputTransferAmount <input > and Readfrom To whom Transfer
-    const amoutTotransfer = inputTransferTo.value
-    // check if there is enough amount in the balance , means call the balance
-    calculate_balance(currentAccount.movements) >= inputTransferAmount.value
-
-    // , then deduct from the amount
-    // and show the remaning balance balance
-    //    const balance = calculate_balance(currentAccount.movements)
-    //     balance_value.textContent = `${balance}`
-
-
-    // inputTransferAmount.value
+    //if balance exist and > 0 and recieved account exist
+    const recievedAccount = accounts.find((acc)=> inputTransferTo.value === acc.username)
+    
+    const Amount =Number(inputTransferAmount.value)
+    if(Amount > 0 && currentAccount.balance >= Amount && recievedAccount?.username !== currentAccount.username
+     ) {
+      
+       currentAccount.movements.push(-Amount);
+      recievedAccount.movements.push(Amount)
+      console.log(recievedAccount)
+      updateUI(currentAccount);
+   }
 
 });
-
-
-// Maximum value of movment array
-
-// let max = 0;
-// for( const curr of movements){
-
-//  max = max >= curr? max : curr;
-
-// }
-
-//const result = movements.reduce( (max,curr)=> max >= curr? max : curr, movements[0])
-
-
-// const dogAge =[1,2,4,6,7,8];
-// const calcHumanAge = function(dogAge){
-//   return  dogAge.map( (age)=> (age<=2 ? age*2 : 16+age*4))
-//   .filter( (age) => age >= 18)
-//   .reduce((acc, curr,i,arr)=> acc+curr/arr.length)
-
-// }
-
-// const humanage = calcHumanAge(dogAge)
-
-
-// console.log(humanage);  // Output: Average human age of filtered dogs
