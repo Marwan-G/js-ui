@@ -107,17 +107,6 @@ const createusername = function (accounts) {
 
 createusername(accounts)
 
-// const diposits = movements.filter( (number)=> number>0)
-// const withdrawal= movements.filter( (mov) => mov < 0)
-// console.log(withdrawal)
-
-// const numbers = [10,10, 10, 10, 4];
-// //const balance = numbers.reduce( (acc,current)=> current > acc? current:acc,numbers[0])
-// const balance =numbers.reduce( function(acc,current){
-//   return acc+current
-// } , 0)
-
-
 // console.log(balance)
 const balance_value = document.querySelector(`.balance__value`)
 
@@ -127,22 +116,17 @@ const calcDisplayBalance = function (currentAccount) {
            
 }
 
-///////
-
 const summary = document.querySelector(`.summary__value--in`)
 const incomeBalance = function (currentAccount) {
      const income = currentAccount.movements.filter((mov) => mov > 0).reduce((acc, curr) => acc + curr, 0)
      summary.textContent = `${income}`
-
 }
-
 
 const summary_out = document.querySelector(`.summary__value--out`)
 const outBalance = function (currentAccount) {
       const out = currentAccount.movements.filter((mov) => mov < 0).reduce((acc, curr) => acc + curr, 0)
        summary_out.textContent = `${Math.abs(out)}`
 }
-
 
 // For each diposit , get interes 1.2
 
@@ -156,30 +140,23 @@ const interest = function (currentAccount) {
 }
 
 const updateUI = function(currentAccount){
-  // movment account
+  //  account movments
   movments_account(currentAccount)
   calcDisplayBalance(currentAccount)
   //account income
   incomeBalance(currentAccount)
-  
   //account outbalnace
   outBalance(currentAccount)
-
   interest(currentAccount)
-    
 }
-
 
 let currentAccount;
 loginbtn.addEventListener("click", function (e) {
     e.preventDefault()
     currentAccount = accounts.find((acc) => acc.username === inputLoginUsername.value)
-
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
     hideElement.style.opacity = 100;
-   
-    
     updateUI(currentAccount);
 });
 
@@ -189,13 +166,13 @@ btnTransfer.addEventListener("click", function (e) {
     const recievedAccount = accounts.find((acc)=> inputTransferTo.value === acc.username)
     
     const Amount =Number(inputTransferAmount.value)
-    if(Amount > 0 && currentAccount.balance >= Amount && recievedAccount?.username !== currentAccount.username
+    if(recievedAccount && Amount > 0 && currentAccount.balance >= Amount && recievedAccount?.username !== currentAccount.username
      ) {
       
        currentAccount.movements.push(-Amount);
       recievedAccount.movements.push(Amount)
       console.log(recievedAccount)
+      inputTransferAmount.value = inputTransferTo.value = ""
       updateUI(currentAccount);
    }
-
 });
